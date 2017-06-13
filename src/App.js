@@ -2,35 +2,40 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-class TInput extends Component {
-  render() {
-    return (
-      <li><input type="checkbox" onChange={this.props.clickFun} checked={this.props.state}/>{this.props.allData}</li>
-    );
-  }
+const ToDoListInput = ({clickFun, state, allData}) => {
+  return (
+    <li><input type="checkbox" onChange={clickFun} checked={state}/>{allData}</li>
+  );
 }
 
 class ToDoList extends Component {
-  constructor(props){
-    super(props);
-    this.state={
-      allData:[]
-    }
+  state = {
+    allData: []
   }
+
   handleKeyDown = (e) => {
-    if(e.key==='Enter'&&e.target.value!==''){
-      this.state.allData.push({text:e.target.value,state:false});
+    if (e.key === 'Enter' && e.target.value !== '') {
       this.setState({
-        allData:this.state.allData
+        allData: [
+          ...this.state.allData, {
+          text: e.target.value,
+          state: false
+        }]
       })
     };
   }
+
   clickFun = (index) => (e) => {
-    this.state.allData[index].state=!this.state.allData[index].state;
     this.setState({
-      allData:this.state.allData
+      allData: this.state.allData.map((data, dataIndex) => {
+        if (dataIndex === index) {
+          return {...data, state: !data.state};
+        }
+        return data;
+      })
     })
   }
+
   render() {
     return (
       <div className="ToDoList">
@@ -42,7 +47,7 @@ class ToDoList extends Component {
           <ul>
             {this.state.allData.map((individual, key) => {
               if(!individual.state){
-                return <TInput allData={individual.text} state={individual.state} key={key} num={key} clickFun={this.clickFun(key)}/>
+                return <ToDoListInput allData={individual.text} state={individual.state} key={key} clickFun={this.clickFun(key)}/>
               }
             })}
           </ul>
@@ -52,7 +57,7 @@ class ToDoList extends Component {
           <ul>
             {this.state.allData.map((individual, key) => {
               if(individual.state){
-                return <TInput allData={individual.text} state={individual.state} key={key} num={key} clickFun={this.clickFun}/>
+                return <ToDoListInput allData={individual.text} state={individual.state} key={key} clickFun={this.clickFun(key)}/>
               }
             })}
           </ul>

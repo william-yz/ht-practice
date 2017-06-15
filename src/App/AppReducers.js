@@ -1,6 +1,9 @@
 const initState = {
 	allData : []
 };
+const localDate = window.localStorage.ToDoList;
+const allDate = JSON.parse(localDate);
+initState.allData = allDate;
 
 const reducer = (state = initState , action) => {
 	switch(action.type){

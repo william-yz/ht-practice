@@ -5,6 +5,11 @@ import actions from './AppAction';
 import ToDoListInput from './ToDoListInput';
 
 class ToDoList extends Component {
+  componentDidUpdate (){
+    const allDate = this.props.allData;
+		const localDate = JSON.stringify(allDate);
+		window.localStorage.ToDoList=localDate;
+  }
   render() {
     return (
       <div className="ToDoList">

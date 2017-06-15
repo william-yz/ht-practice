@@ -1,4 +1,4 @@
-import {put, take, call} from 'redux-saga/effects'
+import {put, take, call,takeEvery} from 'redux-saga/effects'
 import {save, get} from './request'
 
 function* initTodoList() {
@@ -10,18 +10,23 @@ function* initTodoList() {
     })
 }
 function* saveListData() {
-    const {payload: allData} = yield take('SAVE_LIST');
-    const { result } = yield call(save,allData)
-    yield put({
-        type: 'SAVE_LOCAL_DATA',
-        payload: result
+    yield takeEvery('SAVE_LIST', function* (data){
+        const allData = data.payload;
+        const { result } = yield call(save,allData)
+        yield put({
+            type: 'SAVE_LOCAL_DATA',
+            payload: result
+        })
     })
 }
 
+
+
 function* hideBox(){
-    yield take('HIDE_SAVE_BOX');
-    yield put({
-        type: 'HIDE_BOX'
+    yield takeEvery('HIDE_SAVE_BOX', function* (){
+        yield put({
+            type: 'HIDE_BOX'
+        })
     })
 }
 

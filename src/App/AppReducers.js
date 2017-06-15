@@ -1,14 +1,17 @@
+import {save , get} from "../request.js";
+
 const initState = {
-	allData : []
+	allData : [],
+	boxShow : false
 };
-const localDate = window.localStorage.ToDoList;
-const allDate = JSON.parse(localDate);
-initState.allData = allDate;
 
 const reducer = (state = initState , action) => {
 	switch(action.type){
+		case "LOAD_SUCCESS":
+			return {...state, allData: action.payload}
 		case "ADD_LIST":
 			return {
+				...state,
 				allData : [
 					...state.allData,
 					{
@@ -24,10 +27,18 @@ const reducer = (state = initState , action) => {
 			          return {...data, state: !data.state};
 			        }
 			        return data;
-			    })
-			}
+			    }),
+				boxShow : false
+			};
+		case "HIDE_BOX":
+			return {
+				...state,
+				boxShow : false
+			};
+		case "SAVE_LOCAL_DATA":
+			return {...state,boxShow : action.payload}
         default:
-	        return state;
+			return state;
 	}
 }
 

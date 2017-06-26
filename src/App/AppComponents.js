@@ -3,14 +3,16 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import actions from './AppAction';
 import ToDoListInput from './ToDoListInput';
+import SaveBox from './SaveBox';
+import {save , get} from "../request.js";
 
 class ToDoList extends Component {
-  componentDidUpdate (){
-    const allDate = this.props.allData;
-		const localDate = JSON.stringify(allDate);
-		window.localStorage.ToDoList=localDate;
+  componentWillMount = () => {
+    this.props.init();
   }
+
   render() {
+    const saveBox = this.props.state.boxShow?<SaveBox hideBox = {this.props.hideBox}/>:'';
     return (
       <div className="ToDoList">
         <div>
@@ -23,9 +25,9 @@ class ToDoList extends Component {
         <div>
           <p>正在进行</p>
           <ul>
-            {this.props.allData.map((individual, index) => {
+            {this.props.state.allData.map((individual, index) => {
               if(!individual.state){
-                return <ToDoListInput allData={individual.text} state={individual.state} key={index} index={index} changeList={this.props.actions.changeList}/>
+                return <ToDoListInput allData={individual.text} state={individual.state} key={index} changeList={() => {this.props.actions.changeList(index)}}/>
               }
             })}
           </ul>
@@ -33,13 +35,17 @@ class ToDoList extends Component {
         <div>
           <p>已经完成</p>
           <ul>
-            {this.props.allData.map((individual, index) => {
+            {this.props.state.allData.map((individual, index) => {
               if(individual.state){
-                return <ToDoListInput allData={individual.text} state={individual.state} key={index} index={index} changeList={this.props.actions.changeList}/>
+                return <ToDoListInput allData={individual.text} state={individual.state} key={index} changeList={() => {this.props.actions.changeList(index)}}/>
               }
             })}
           </ul>
         </div>
+        <div>
+          <button onClick= { () => {this.props.saveFun(this.props.state.allData)}}>保存</button>
+        </div>
+        {saveBox}
       </div>
     );
   }
@@ -47,11 +53,14 @@ class ToDoList extends Component {
 
 
 const mapStateToProps = state => ({
-    allData: state.allData
+    state: state
 });
 
 const mapDispatchToProps = dispatch => ({
-    actions: bindActionCreators(actions, dispatch)
+    actions: bindActionCreators(actions, dispatch),
+    init: () => dispatch({type: 'INIT_TODO_LIST'}),
+    saveFun: (allData) => dispatch({type : "SAVE_LIST", payload: allData}),
+    hideBox: () => {dispatch ({type:'HIDE_SAVE_BOX'})}
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ToDoList);

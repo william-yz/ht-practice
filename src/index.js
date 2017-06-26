@@ -10,14 +10,20 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { createStore } from 'redux';
+import { applyMiddleware, createStore } from 'redux';
+import createSagaMiddleware from 'redux-saga'
+import logger from 'redux-logger'
 import { Provider } from 'react-redux';
 import AppReducers from './App/AppReducers';
 import App from './App/AppComponents';
 import registerServiceWorker from './registerServiceWorker';
 import './index.css';
+import sagas from './saga'
 
-const store = createStore(AppReducers);
+const sagaMiddleware = createSagaMiddleware()
+const store = createStore(AppReducers, applyMiddleware(sagaMiddleware, logger));
+
+sagas.forEach(sagaMiddleware.run)
 
 ReactDOM.render(
     <Provider store={store}>

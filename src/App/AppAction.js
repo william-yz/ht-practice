@@ -1,3 +1,5 @@
+import {save} from "../request.js";
+
 const action={
     handleKeyDown : e => {
         return {
@@ -5,11 +7,12 @@ const action={
             text: e.target.value
         }
     },
-    changeList : e => {
+    changeList : index => {
         return {
             type: "CHANGE_LIST",
-            index: e.target.value
+            index: index
         }
+
     }
 }
 export default action;

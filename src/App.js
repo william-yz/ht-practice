@@ -10,10 +10,12 @@ class App extends Component {
     this.handleDelete = this.handleDelete.bind(this);
     this.handleDele = this.handleDele.bind(this);    
     this.handleClick = this.handleClick.bind(this);
+    this.click = this.click.bind(this);
     this.state = {
       items:[],
       doneList:[],
       text:"",
+      flag:true,
       num1:0,
       num2:0
     };
@@ -63,13 +65,32 @@ class App extends Component {
     var item = toitems[id];
     var donelist = [];
     donelist.unshift(item);
-    toitems.splice(id,1);    
-    this.setState({
+    toitems.splice(id,1); 
+
+    this.setState((prevState) => ({
       items:toitems,
-      doneList:donelist,
-    })
+      doneList:prevState.doneList.concat(donelist),
+    }));
+
     this.state.num1 --;
     this.state.num2 ++;
+  }
+
+  click(e){
+    var id = e.target.getAttribute("data-id");
+    var donelist = this.state.doneList;
+    var item = donelist[id];
+    var items = [];
+    items.push(item);
+    donelist.splice(id,1); 
+
+    this.setState((prevState) => ({
+      doneList:donelist,
+      items:prevState.items.concat(items),
+    }));
+
+    this.state.num1 ++;
+    this.state.num2 --;
   }
 
   render() {
@@ -85,7 +106,8 @@ class App extends Component {
         </form>
         <ToDoList {...this.state} handleDelete={this.handleDelete} 
         handleClick={this.handleClick}/>
-        <DoneList {...this.state} handleDele={this.handleDele} />
+        <DoneList {...this.state} handleDele={this.handleDele}
+        click={this.click} />
       </div>
     );
   }
@@ -131,7 +153,8 @@ class DoneList extends Component{
           {
             this.props.doneList.map((item,id) => (
               <li key={id}>
-                <input type="checkbox" />
+                <input type="checkbox" checked={this.props.flag} data-id={id}
+                onClick={this.props.click} />
                 <p>{item.text}</p>
                 <button data-id={id} onClick={this.props.handleDele} >delete</button>
               </li>   

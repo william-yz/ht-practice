@@ -20,7 +20,6 @@ class App extends Component {
       num2:0
     };
   }
-
   handleChange(e){
     this.setState({
       text:e.target.value
@@ -37,6 +36,12 @@ class App extends Component {
       text:"",
     }));
     this.state.num1 ++
+
+    // this.setState({
+    //   items: [...this.state.items, newItem],
+    //   text: '',
+    //   num1: this.state.num1 + 1
+    // })
   }
 
   handleDelete(e){
@@ -93,7 +98,7 @@ class App extends Component {
     this.state.num2 --;
   }
 
-  render() {
+  render = () => {
     return (
       <div className="App">
         <form action="" id="form" onSubmit = {this.handleSubmit} >

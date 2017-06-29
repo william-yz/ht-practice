@@ -30,12 +30,10 @@ export default class TodoList extends React.Component {
         })
     }
 
-    handleDelete = (id,isComplate) => {
+    handleDelete = (id) => {
         console.log(id)
-        var delelist = this.state.todoList;
-        delelist.splice(id,1);
         this.setState({
-            todoList: delelist
+            todoList: this.state.todoList.filter(todo => todo.id !== id)
         })
         console.log(this.state.todoList)
     }
@@ -86,9 +84,9 @@ function List({title, items, handleClick,handleDelete}) {
             items.map((item,id) => (
               <li key={item.id}>
                 <input className="choose1" type="checkbox" checked={item.complated} 
-            onClick={() => handleClick(item.id)} />
+            onChange={() => handleClick(item.id)} />
                 <p>{item.text}</p>
-                <button onClick={() => handleDelete(id,item.complated)} >delete</button>
+                <button onClick={() => handleDelete(item.id)} >delete</button>
                 </li>              
             ))
           }

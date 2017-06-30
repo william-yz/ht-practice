@@ -5,38 +5,7 @@ let id = 0
 
 class TodoList extends React.Component {
     state = {
-        todoList: [],
-        text: ''
-    }
-
-    add = () => {
-        this.setState({
-            todoList: [...this.state.todoList, {
-                complated: false,
-                text: this.state.text,
-                id: id++
-            }],
-            text: ''
-        })
-    }
-
-    complate = (id) => {
-        this.setState({
-            todoList: this.state.todoList.map((todo) => {
-                if (todo.id === id) {
-                    return {...todo, complated: !todo.complated}
-                }
-                return todo
-            }),
-        })
-    }
-
-    handleDelete = (id) => {
-        console.log(id)
-        this.setState({
-            todoList: this.state.todoList.filter(todo => todo.id !== id)
-        })
-        console.log(this.state.todoList)
+        text:""
     }
     render = () => {
         console.log(this.props)
@@ -51,14 +20,14 @@ class TodoList extends React.Component {
                 <List
                     title="Doing"
                     items={this.props.todoList.filter(todo => !todo.complated)}
-                    handleClick={this.complate}
-                    handleDelete={this.handleDelete} 
+                    handleClick={this.props.complate}
+                    handleDelete={this.props.handleDelete} 
                     />
                 <List
                     title="Done"
-                    items={this.state.todoList.filter(todo => todo.complated)}
-                    handleClick={this.complate}   
-                    handleDelete={this.handleDelete}                 
+                    items={this.props.todoList.filter(todo => todo.complated)}
+                    handleClick={this.props.complate}   
+                    handleDelete={this.props.handleDelete}                 
                     />
             </div>
         )
@@ -84,8 +53,8 @@ function List({title, items, handleClick,handleDelete}) {
         
         <ul id = 'todolist' >
           {
-            items.map((item,id) => (
-              <li key={id}>
+            items.map((item) => (
+              <li key={item.id}>
                 <input className="choose1" type="checkbox" checked={item.complated} 
             onChange={() => handleClick(item.id)} />
                 <p>{item.text}</p>
@@ -107,7 +76,9 @@ function mapStateToProps(state){
 
 function mapDispatchToProps(dispatch){
     return {
-        add:(id,text) => dispatch({type:'ADD',id:id,text:text})
+        add:(id,text) => dispatch({type:'ADD',id:id,text:text}),
+        complate:(id) => dispatch({type:'COMPLATE',id:id}),
+        handleDelete:(id) => dispatch({type:'DELETE',id:id})
     }
 }
 

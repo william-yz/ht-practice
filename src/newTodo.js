@@ -1,21 +1,24 @@
 import React from 'react'
 import {connect} from 'react-redux'
 
-let id = 0
+// import {get} from './request';
+let id = () => Math.random().toString().slice(2)
 
 class TodoList extends React.Component {
     state = {
         text:""
     }
+    componentWillMount=()=>{
+        this.props.init()
+    }
     render = () => {
-        console.log(this.props)
         const {add} = this.props
         return (
             <div>
                 <Opertaion 
                     text={this.state.text}
                     onChange={(e) => this.setState({text: e.target.value})}
-                    add={() => add(id ++ ,this.state.text)}
+                    add={() => add(id() ,this.state.text)}
                 />
                 <List
                     title="Doing"
@@ -51,7 +54,7 @@ function List({title, items, handleClick,handleDelete}) {
             <span>{items.length}</span>
         </h3>
         
-        <ul id = 'todolist' >
+        <ul className = 'todolist' >
           {
             items.map((item) => (
               <li key={item.id}>
@@ -59,6 +62,7 @@ function List({title, items, handleClick,handleDelete}) {
             onChange={() => handleClick(item.id)} />
                 <p>{item.text}</p>
                 <button onClick={() => handleDelete(item.id)} >delete</button>
+                <span>{item.id}</span>
                 </li>              
             ))
           }
@@ -69,16 +73,27 @@ function List({title, items, handleClick,handleDelete}) {
 }
 
 function mapStateToProps(state){
+    
     return {
         todoList: state.todoList
     }
 }
 
 function mapDispatchToProps(dispatch){
+
     return {
-        add:(id,text) => dispatch({type:'ADD',id:id,text:text}),
-        complate:(id) => dispatch({type:'COMPLATE',id:id}),
-        handleDelete:(id) => dispatch({type:'DELETE',id:id})
+        init:() => {
+            dispatch({type:'INIT'})
+        },
+        add:(id,text) => {
+            dispatch({type:'ADD',id:id,text:text})
+        },
+        complate:(id) => {
+            dispatch({type:'COMPLATE',id:id})
+        },
+        handleDelete:(id) => {
+            dispatch({type:'DELETE',id:id})
+        }
     }
 }
 

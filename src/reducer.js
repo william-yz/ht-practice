@@ -20,9 +20,11 @@ function TodoApp(state={todoList: []},action) {
         case DELETE:
             state.todoList = state.todoList.filter((todo) => todo.id !== action.id)
             return  {todoList:state.todoList}
+        // 初始化动作    
         case 'LOAD-SUCCESS':
             state.todoList = [...state.todoList,...action.data]
             return {todoList:state.todoList}
+
         default:
             return state
     }
